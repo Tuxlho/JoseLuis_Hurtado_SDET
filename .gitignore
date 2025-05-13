@@ -1,0 +1,9 @@
+#Created by Jose Luis on May 13, 2025 at 17:22 hrs
+*.iml
+.idea/*
+.idea/
+target/
+
+# Outputs Reports #
+*/test-output/
+*/target/
