@@ -45,13 +45,19 @@ public class Demo_Home_Challenge {
         testDriver = currentDriver;
     }
 
-    private void makeFilter(WebDriver currentDriver)
+    private void makeFilterNuevos(WebDriver currentDriver)
     {
         final By moduleFiltersBy = new By.ByCssSelector("section[class='ui-search-filter-groups']");
-        final By nuevoLinkNameBy = new By.ByLinkText("Nuevo");
+        final By filtroCondicionBy = new By.ByCssSelector("div[class='ui-search-filter-dl']:nth-child(5)");
+        final By nuevoLinkNameBy = new By.ByCssSelector("ul li:first-child a");
+
+        WebDriverWait waitingForCondicionFiltro = new WebDriverWait(currentDriver, Duration.ofSeconds(5));
+        waitingForCondicionFiltro.until(ExpectedConditions.presenceOfElementLocated(moduleFiltersBy));
+        waitingForCondicionFiltro.until(ExpectedConditions.presenceOfElementLocated(filtroCondicionBy));
 
         WebElement moduleFilters = currentDriver.findElement(moduleFiltersBy);
-        WebElement applyNuevoAsFilter = moduleFilters.findElement(nuevoLinkNameBy);
+        WebElement filtroCondicion = moduleFilters.findElement(filtroCondicionBy);
+        WebElement applyNuevoAsFilter = filtroCondicion.findElement(nuevoLinkNameBy);
         applyNuevoAsFilter.click();
     }
 
@@ -64,7 +70,7 @@ public class Demo_Home_Challenge {
         countrySelector.click();
         tmpDemoResources.closeIntroduceCodigoPostal(testDriver);
         tmpDemoResources.makeProductSearch("playstation 5", testDriver);
-        tmpDemoResources.makeFilter(testDriver);
+        tmpDemoResources.makeFilterNuevos(testDriver);
         testDriver.quit();
     }
 }
