@@ -78,7 +78,10 @@ public class Demo_Home_Challenge {
         tmpDemoResources.makeProductSearch("playstation 5", testDriver);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToNuevo);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToLocation);
-        //tmpDemoResources.makeFilterNuevos(testDriver);
-        //testDriver.quit();
+        WebElement selectOrdenacion = testDriver.findElement(new By.ByCssSelector("div[class='ui-search-sort-filter'] button svg"));
+        selectOrdenacion.click();
+        WebElement ordenadoMayorPrecio = testDriver.findElement(new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3)"));
+        ordenadoMayorPrecio.click();
+        testDriver.quit();
     }
 }
