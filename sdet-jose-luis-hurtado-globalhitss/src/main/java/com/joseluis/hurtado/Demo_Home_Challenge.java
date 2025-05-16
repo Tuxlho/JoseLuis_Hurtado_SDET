@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -45,11 +46,11 @@ public class Demo_Home_Challenge {
         testDriver = currentDriver;
     }
 
-    private void makeFilterNuevos(WebDriver currentDriver)
+    private void makeAnyFilter(WebDriver currentDriver, String [] filterSetup)
     {
-        final By moduleFiltersBy = new By.ByCssSelector("section[class='ui-search-filter-groups']");
-        final By filtroCondicionBy = new By.ByCssSelector("div[class='ui-search-filter-dl']:nth-child(5)");
-        final By nuevoLinkNameBy = new By.ByCssSelector("ul li:first-child a");
+        final By moduleFiltersBy = new By.ByCssSelector(filterSetup[0]);
+        final By filtroCondicionBy = new By.ByCssSelector(filterSetup[1]);
+        final By nuevoLinkNameBy = new By.ByCssSelector(filterSetup[2]);
 
         WebDriverWait waitingForCondicionFiltro = new WebDriverWait(currentDriver, Duration.ofSeconds(5));
         waitingForCondicionFiltro.until(ExpectedConditions.presenceOfElementLocated(moduleFiltersBy));
@@ -57,12 +58,17 @@ public class Demo_Home_Challenge {
 
         WebElement moduleFilters = currentDriver.findElement(moduleFiltersBy);
         WebElement filtroCondicion = moduleFilters.findElement(filtroCondicionBy);
+        new Actions(currentDriver).scrollToElement(filtroCondicion).perform();
         WebElement applyNuevoAsFilter = filtroCondicion.findElement(nuevoLinkNameBy);
+        new Actions(currentDriver).scrollToElement(applyNuevoAsFilter).perform();
         applyNuevoAsFilter.click();
+        testDriver = currentDriver;
     }
 
     public static void main(String[] args)
     {
+        String []filtersLevelToNuevo = {"section[class='ui-search-filter-groups']","div[class='ui-search-filter-dl']:nth-child(5)", "ul li:first-child a"};
+        String []filtersLevelToLocation = {"section[class='ui-search-filter-groups']","div[class='ui-search-filter-dl']:nth-child(10)","ul li:first-child a span[class*='name']"};
         Demo_Home_Challenge tmpDemoResources = new Demo_Home_Challenge();
         testDriver = tmpDemoResources.InitializeWebDriver();
         testDriver.get(testURL);
@@ -70,7 +76,9 @@ public class Demo_Home_Challenge {
         countrySelector.click();
         tmpDemoResources.closeIntroduceCodigoPostal(testDriver);
         tmpDemoResources.makeProductSearch("playstation 5", testDriver);
-        tmpDemoResources.makeFilterNuevos(testDriver);
-        testDriver.quit();
+        tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToNuevo);
+        tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToLocation);
+        //tmpDemoResources.makeFilterNuevos(testDriver);
+        //testDriver.quit();
     }
 }
