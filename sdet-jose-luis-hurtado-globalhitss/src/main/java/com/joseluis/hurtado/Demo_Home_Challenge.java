@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class Demo_Home_Challenge {
     private static final String testURL = "https://www.mercadolibre.com";
@@ -22,8 +23,7 @@ public class Demo_Home_Challenge {
         return tmpDriver;
     }
 
-    private void makeProductSearch(String productToSearch, WebDriver currentDriver)
-    {
+    private void makeProductSearch(String productToSearch, WebDriver currentDriver) {
         final By navSearchBy = new By.ByCssSelector("form[class='nav-search'] input");
         final By sumbmitButtonBy = new By.ByCssSelector("form[class='nav-search'] button");
 
@@ -34,8 +34,7 @@ public class Demo_Home_Challenge {
         testDriver = currentDriver;
     }
 
-    private void closeIntroduceCodigoPostal(WebDriver currentDriver)
-    {
+    private void closeIntroduceCodigoPostal(WebDriver currentDriver) {
         final By recuadroPreguntaIngresaCodigoPostal = new By.ByCssSelector("div[class='onboarding-cp'] div");
         final By butonMasTardeIngresarBy = new By.ByCssSelector("button[data-js='onboarding-cp-close'] span");
 
@@ -46,8 +45,7 @@ public class Demo_Home_Challenge {
         testDriver = currentDriver;
     }
 
-    private void makeAnyFilter(WebDriver currentDriver, String [] filterSetup)
-    {
+    private void makeAnyFilter(WebDriver currentDriver, String[] filterSetup) {
         final By moduleFiltersBy = new By.ByCssSelector(filterSetup[0]);
         final By filtroCondicionBy = new By.ByCssSelector(filterSetup[1]);
         final By nuevoLinkNameBy = new By.ByCssSelector(filterSetup[2]);
@@ -65,10 +63,16 @@ public class Demo_Home_Challenge {
         testDriver = currentDriver;
     }
 
-    public static void main(String[] args)
-    {
-        String []filtersLevelToNuevo = {"section[class='ui-search-filter-groups']","div[class='ui-search-filter-dl']:nth-child(5)", "ul li:first-child a"};
-        String []filtersLevelToLocation = {"section[class='ui-search-filter-groups']","div[class='ui-search-filter-dl']:nth-child(10)","ul li:first-child a span[class*='name']"};
+    private void waitElementAndAfterClick(WebDriver currentDriver, By elementToCoordinate) {
+        WebDriverWait waitingForElement = new WebDriverWait(currentDriver, Duration.ofSeconds(5));
+        waitingForElement.until(ExpectedConditions.presenceOfElementLocated(elementToCoordinate));
+        currentDriver.findElement(elementToCoordinate).click();
+        testDriver = currentDriver;
+    }
+
+    public static void main(String[] args) {
+        String[] filtersLevelToNuevo = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(5)", "ul li:first-child a"};
+        String[] filtersLevelToLocation = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(10)", "ul li:first-child a span[class*='name']"};
         Demo_Home_Challenge tmpDemoResources = new Demo_Home_Challenge();
         testDriver = tmpDemoResources.InitializeWebDriver();
         testDriver.get(testURL);
@@ -78,10 +82,8 @@ public class Demo_Home_Challenge {
         tmpDemoResources.makeProductSearch("playstation 5", testDriver);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToNuevo);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToLocation);
-        WebElement selectOrdenacion = testDriver.findElement(new By.ByCssSelector("div[class='ui-search-sort-filter'] button svg"));
-        selectOrdenacion.click();
-        WebElement ordenadoMayorPrecio = testDriver.findElement(new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3)"));
-        ordenadoMayorPrecio.click();
+        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[class='ui-search-sort-filter'] button div"));
+        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3)"));
         testDriver.quit();
     }
 }
