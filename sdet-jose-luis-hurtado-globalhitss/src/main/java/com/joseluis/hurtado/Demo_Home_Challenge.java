@@ -64,13 +64,36 @@ public class Demo_Home_Challenge {
     }
 
     private void waitElementAndAfterClick(WebDriver currentDriver, By elementToCoordinate) {
-        WebDriverWait waitingForElement = new WebDriverWait(currentDriver, Duration.ofSeconds(5));
+        WebDriverWait waitingForElement = new WebDriverWait(currentDriver, Duration.ofSeconds(12));
         waitingForElement.until(ExpectedConditions.presenceOfElementLocated(elementToCoordinate));
+        waitingForElement.until(ExpectedConditions.elementToBeClickable(elementToCoordinate));
         currentDriver.findElement(elementToCoordinate).click();
         testDriver = currentDriver;
     }
 
-    public static void main(String[] args) {
+    private String[] GotProductNameList(WebDriver currentDriver) throws InterruptedException {
+        final By productItemContainer = new By.ByCssSelector("ol[class='ui-search-layout ui-search-layout--stack'] li");
+        final By productItemName = new By.ByCssSelector("h3");
+        String[] productTitleList;
+        int counter = 0;
+
+        Thread.sleep(35);
+        WebDriverWait waitingForItemsList = new WebDriverWait(currentDriver, Duration.ofSeconds(15));
+        waitingForItemsList.until(ExpectedConditions.numberOfElementsToBeMoreThan(productItemContainer, 15));
+        waitingForItemsList.until(ExpectedConditions.numberOfElementsToBeMoreThan(new By.ByCssSelector("ol[class='ui-search-layout ui-search-layout--stack'] li h3"), 15));
+
+        List<WebElement> itemsCardSpaceList = currentDriver.findElements(productItemContainer);
+        productTitleList = new String[itemsCardSpaceList.size()];
+        for (WebElement currentCardSpace : itemsCardSpaceList) {
+            WebElement tmpCurrentProductTitle = currentCardSpace.findElement(productItemName);
+            productTitleList[counter] = tmpCurrentProductTitle.getText();
+            counter++;
+        }
+        testDriver = currentDriver;
+        return productTitleList;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
         String[] filtersLevelToNuevo = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(5)", "ul li:first-child a"};
         String[] filtersLevelToLocation = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(10)", "ul li:first-child a span[class*='name']"};
         Demo_Home_Challenge tmpDemoResources = new Demo_Home_Challenge();
@@ -82,8 +105,11 @@ public class Demo_Home_Challenge {
         tmpDemoResources.makeProductSearch("playstation 5", testDriver);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToNuevo);
         tmpDemoResources.makeAnyFilter(testDriver, filtersLevelToLocation);
-        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[class='ui-search-sort-filter'] button div"));
-        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3)"));
+        testDriver.navigate().refresh();
+        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[class='ui-search-sort-filter'] button div svg"));
+        tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3) span"));
+        testDriver.navigate().refresh();
+        tmpDemoResources.GotProductNameList(testDriver);
         testDriver.quit();
     }
 }
