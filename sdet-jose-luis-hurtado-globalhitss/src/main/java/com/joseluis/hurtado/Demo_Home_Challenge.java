@@ -17,7 +17,9 @@ public class Demo_Home_Challenge {
     private static WebDriver testDriver;
 
     private WebDriver InitializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver", "../../../WebDriver/chromedriver-win64/chromedriver.exe");
+        String chromeDriverPathForWindows = System.getProperty("user.dir");
+        chromeDriverPathForWindows += "/src/main/resources/chromedriver_win64";
+        System.setProperty("webdriver.chrome.driver", chromeDriverPathForWindows + "/chromedriver.exe");
         WebDriver tmpDriver = new ChromeDriver();
         tmpDriver.manage().window().maximize();
         return tmpDriver;
