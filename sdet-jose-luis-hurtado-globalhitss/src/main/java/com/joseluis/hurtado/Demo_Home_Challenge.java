@@ -93,6 +93,22 @@ public class Demo_Home_Challenge {
         return productTitleList;
     }
 
+    private void shownProductsNameBySystemOut(String []currentProductList)
+    {
+        Integer pructIndexCounter = 1;
+        System.out.println("Imprimiendo los primeros 5 nombres de productos que pide el Home Challengue");
+        for(String currentProductName : currentProductList)
+        {
+            if(pructIndexCounter.equals(6))
+            {
+                System.out.println(" ");
+                System.out.println("Imprimiendo los restantes nombres de productos");
+            }
+            System.out.println(pructIndexCounter + ".- " + currentProductName);
+            pructIndexCounter++;
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException {
         String[] filtersLevelToNuevo = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(5)", "ul li:first-child a"};
         String[] filtersLevelToLocation = {"section[class='ui-search-filter-groups']", "div[class='ui-search-filter-dl']:nth-child(10)", "ul li:first-child a span[class*='name']"};
@@ -109,7 +125,8 @@ public class Demo_Home_Challenge {
         tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[class='ui-search-sort-filter'] button div svg"));
         tmpDemoResources.waitElementAndAfterClick(testDriver, new By.ByCssSelector("div[data-testid='popper'] ul li:nth-child(3) span"));
         testDriver.navigate().refresh();
-        tmpDemoResources.GotProductNameList(testDriver);
+        String []productsNameList = tmpDemoResources.GotProductNameList(testDriver);
+        tmpDemoResources.shownProductsNameBySystemOut(productsNameList);
         testDriver.quit();
     }
 }
